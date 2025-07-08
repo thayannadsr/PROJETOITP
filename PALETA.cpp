@@ -1,14 +1,8 @@
 #include <iostream>
+#include <cor.h>
 #include <vector>
 #include <fstream>
 using namespace std;
-
-
-struct Cor {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-};
 
 class Paleta {
     public:
