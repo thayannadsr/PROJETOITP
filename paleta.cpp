@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+using namespace std;
+
+
+struct Cor {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+};
+
+class Paleta {
+    public:
+        int quantidade;
+        vector<Cor> cores;
+        vector<int> valores;
+    
+        Paleta(int q, vector<Cor> c, vector<int> v) {
+            quantidade = q;
+            cores = c;
+            valores = ordenarValores(v);
+        }
+
+        vector<int> ordenarValores(vector<int> v) {
+            sort(v.begin(), v.end());
+            return v;
+        }
+
+        void escreverPaleta() {
+            ofstream file("novaPaleta.txt");
+            file << quantidade << "\n";
+            for (int x=0; x<quantidade; x++) {
+                file << valores[x] << " " << int(cores[x].r) << " " << int(cores[x].g) << " " << int(cores[x].b) << "\n";
+            }
+            file.close();
+        }
+
+        Paleta lerPaleta(string nome_paleta) {
+            ifstream arquivo;
+            arquivo.open(nome_paleta);
+            string line;
+
+            arquivo >> line;
+            int quantidadeNovaPaleta = stoi(line);
+            vector<int> listaValoresNovaPaleta;
+            vector<Cor> listaCoresNovaPaleta;
+
+            for (int x=0; x<quantidadeNovaPaleta; x++) {
+                arquivo >> line;
+                int valorNovaPaleta = stoi(line);
+                listaValoresNovaPaleta.push_back(valorNovaPaleta);
+
+                Cor novaCor;
+                arquivo >> line;
+                novaCor.r = stoi(line);
+                arquivo >> line;
+                novaCor.g = stoi(line);
+                arquivo >> line;
+                novaCor.b = stoi(line);
+                listaCoresNovaPaleta.push_back(novaCor);
+            }
+
+            arquivo.close();
+
+            Paleta novaPaleta(quantidadeNovaPaleta, listaCoresNovaPaleta, listaValoresNovaPaleta);
+
+            return novaPaleta;
+        }
+
+        Cor consultarCor(int n) {
+            for (int x=0; x<quantidade; x++) {
+                if (valores[x] > n) {
+                    cout << "maior: " << valores[x] << endl;
+                    return cores[x-1];
+                }
+            }
+
+            return cores[quantidade-1];
+        }
+};
+
+
+int main() {
+    Cor red {255, 0, 0};
+
+    Paleta cores(4,
+        {{255,0,0}, {0,255,0}, {0,0,255}, {0,0,0}},
+        {1000, 10, 20, 30}
+    );
+
+    
+    Cor corConsulta = cores.consultarCor(10);
+    cout << int(corConsulta.r) << int(corConsulta.g) << int(corConsulta.b) << endl;
+    
+    cores = cores.lerPaleta("paleta.txt");
+    cores.escreverPaleta();
+    
+    // for (auto n : cores.valores) cout << n << ", " << endl;
+    // cout << int(red.b) << endl;
+    // cout << cores.quantidade << endl;
+    // cout << cores.valores[3] << endl;
+
+    return 0;
+}
