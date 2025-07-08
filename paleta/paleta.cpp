@@ -28,8 +28,8 @@ class Paleta {
             return v;
         }
 
-        void escreverPaleta() {
-            ofstream file("novaPaleta.txt");
+        void escreverPaleta(string nomeNovaPaleta) {
+            ofstream file(nomeNovaPaleta);
             file << quantidade << "\n";
             for (int x=0; x<quantidade; x++) {
                 file << valores[x] << " " << int(cores[x].r) << " " << int(cores[x].g) << " " << int(cores[x].b) << "\n";
@@ -80,27 +80,3 @@ class Paleta {
             return cores[quantidade-1];
         }
 };
-
-
-int main() {
-    Cor red {255, 0, 0};
-
-    Paleta cores(4,
-        {{255,0,0}, {0,255,0}, {0,0,255}, {0,0,0}},
-        {1000, 10, 20, 30}
-    );
-
-    
-    Cor corConsulta = cores.consultarCor(10);
-    cout << int(corConsulta.r) << int(corConsulta.g) << int(corConsulta.b) << endl;
-    
-    cores = cores.lerPaleta("paleta.txt");
-    cores.escreverPaleta();
-    
-    // for (auto n : cores.valores) cout << n << ", " << endl;
-    // cout << int(red.b) << endl;
-    // cout << cores.quantidade << endl;
-    // cout << cores.valores[3] << endl;
-
-    return 0;
-}
