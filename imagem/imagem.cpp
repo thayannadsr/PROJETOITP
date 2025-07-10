@@ -49,10 +49,10 @@ class Imagem {
         }
 
         void exibirValoresPixelRGB() {
-            for (int a = 0; a < largura; a++) {
+            for (int a = 0; a < altura; a++) {
                 cout << "| ";              
-                for (int b = 0; b < altura; b++) {
-                    cout << int(pixel[a][b].r) << int(pixel[a][b].g) << int(pixel[a][b].b) << ", ";
+                for (int b = 0; b < largura; b++) {
+                    cout << int(pixel[b][a].r) << int(pixel[b][a].g) << int(pixel[b][a].b) << ", ";
                 }
                 cout << "|\n";
             }
@@ -61,7 +61,7 @@ class Imagem {
         void escreverPPM(string nomeNovoPPM) {
             ofstream file(nomeNovoPPM);
             file << tipo << "\n";
-            file << altura << " " << largura << "\n";
+            file << largura << " " << altura << "\n";
             file << max << "\n";
             for (int x = 0; x < largura; x++) {
                 for (int y = 0; y < altura; y++) {
