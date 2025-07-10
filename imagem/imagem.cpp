@@ -3,6 +3,7 @@
 #include "../paleta/paleta.cpp"
 using namespace std;
 
+
 class Imagem {
     int largura;
     int altura;

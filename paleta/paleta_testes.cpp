@@ -1,6 +1,7 @@
 #include "paleta.cpp"
 using namespace std;
 
+
 int main() {
     Cor red {255, 0, 0};
 

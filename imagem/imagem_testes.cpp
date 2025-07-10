@@ -2,6 +2,7 @@
 #include "imagem.cpp"
 using namespace std;
 
+
 int main() {
     Imagem matrizTeste(2, 3);
     cout << matrizTeste.tipo << "\n";
