@@ -9,7 +9,7 @@ int main() {
     matrizTeste.mudarPixel(0, 0, 255, 0, 0);
     matrizTeste.mudarPixel(1, 1, 0, 255, 0);
     matrizTeste.mudarPixel(0, 2, 0, 0, 255);
-    matrizTeste.escreverPPM("imagem_teste_erro.ppm"); // corrigir x, y
+    matrizTeste.escreverPPM("imagem_teste_erro"); // corrigir x, y
     matrizTeste.exibirValoresPixelRGB();
 
     // Imagem matrizTeste(10, 10);

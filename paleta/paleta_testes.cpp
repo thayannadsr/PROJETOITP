@@ -13,8 +13,8 @@ int main() {
     Cor corConsulta = cores.consultarCor(10);
     cout << int(corConsulta.r) << int(corConsulta.g) << int(corConsulta.b) << endl;
     
-    cores = cores.lerPaleta("paleta.txt");
-    cores.escreverPaleta("novaPaleta.txt");
+    cores = cores.lerPaleta("./paletas_txt/paleta.txt");
+    cores.escreverPaleta("nova_paleta");
     
     // for (auto n : cores.valores) cout << n << ", " << endl;
     // cout << int(red.b) << endl;

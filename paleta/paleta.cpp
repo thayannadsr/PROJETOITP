@@ -29,7 +29,7 @@ class Paleta {
         }
 
         void escreverPaleta(string nomeNovaPaleta) {
-            ofstream file(nomeNovaPaleta);
+            ofstream file("./paletas_txt/" + nomeNovaPaleta + ".txt");
             file << quantidade << "\n";
             for (int x=0; x<quantidade; x++) {
                 file << valores[x] << " " << int(cores[x].r) << " " << int(cores[x].g) << " " << int(cores[x].b) << "\n";
@@ -72,7 +72,7 @@ class Paleta {
         Cor consultarCor(int n) {
             for (int x=0; x<quantidade; x++) {
                 if (valores[x] > n) {
-                    cout << "maior: " << valores[x] << endl;
+                    // cout << "maior: " << valores[x] << endl;
                     return cores[x-1];
                 }
             }
