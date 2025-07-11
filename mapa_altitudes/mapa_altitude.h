@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./paleta/paleta.h"
+#include "cor.h"
 
 using namespace std;
 #ifndef IMAGEM_H

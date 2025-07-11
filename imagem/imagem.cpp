@@ -1,23 +1,27 @@
 #include <iostream>
-// #include "imagem.h"
-#include "../paleta/paleta.cpp"
+#include <fstream>
+#include "imagem.h"
 using namespace std;
 
 
 class Imagem {
+    string tipo;
     int largura;
     int altura;
-    Cor** pixel;
     int max;
+    Cor** pixel;
     
     public:
-        string tipo;
 
         Imagem(int alargura, int aaltura, string atipo="P3", int mInt=255) {
             largura = alargura;
             altura = aaltura;
             tipo = atipo;
             max = mInt;
+        }
+        
+        ~Imagem() {
+            desalocarMatriz();
         }
 
         void matrizImagem() {
