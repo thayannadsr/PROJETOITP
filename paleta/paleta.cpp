@@ -2,14 +2,9 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include "cor.h"
 using namespace std;
 
-
-struct Cor {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-};
 
 class Paleta {
     public:

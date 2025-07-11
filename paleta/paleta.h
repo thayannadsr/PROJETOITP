@@ -1,15 +1,24 @@
-#ifndef COR_H
-#define COR_H
+#ifndef PALETA_H
+#define PALETA_H
 
 #include <iostream>
+#include <vector>
+#include "cor.h"
 using namespace std;
 
-class Cor {
-    unsigned char r, g, b;
 
+class Paleta {
     public:
-    Cor() : r(0), g(0), b(0) {}
-    Cor (unsigned char _r, unsigned char _g, unsigned char _b) : r(_r), g(_g), b(_b) {}
+        int quantidade;
+        vector<Cor> cores;
+        vector<int> valores;
+    
+        Paleta(int q, vector<Cor> c, vector<int> v);
+
+        vector<int> ordenarValores(vector<int> v);
+        void escreverPaleta(string nomeNovaPaleta);
+        Paleta lerPaleta(string nome_paleta);
+        Cor consultarCor(int n);
 };
 
 #endif
