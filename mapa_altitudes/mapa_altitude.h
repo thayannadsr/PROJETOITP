@@ -1,5 +1,6 @@
 #include <iostream>
-#include <cor.h>
+#include "cor.h"
+
 using namespace std;
 #ifndef IMAGEM_H
 #define IMAGEM_H
