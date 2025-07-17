@@ -1,9 +1,8 @@
-#include <iostream>
-#include "cor.h"
-
-using namespace std;
 #ifndef IMAGEM_H
 #define IMAGEM_H
+#include <iostream>
+#include "cor.h"
+using namespace std;
 
 class Imagem {
     string tipo;
