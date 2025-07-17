@@ -83,6 +83,6 @@ int main() {
     // matrizTeste.mudarPixel(9, 9, 255, 255, 255);
 
     // matrizTeste.exibirValoresPixelRGB();
-    // matrizTeste.escreverPPM("amogus.ppm");
+    // matrizTeste.escreverPPM("./imagens_ppm/amogus");
     // matrizTeste.desalocarMatriz();
 }

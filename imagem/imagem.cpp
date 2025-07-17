@@ -60,7 +60,7 @@ class Imagem {
         }
 
         void escreverPPM(string nomeNovoPPM) {
-            ofstream file("./imagens_ppm/" + nomeNovoPPM + ".ppm");
+            ofstream file(nomeNovoPPM + ".ppm");
             file << tipo << "\n";
             file << altura << " " << largura << "\n";
             file << max << "\n";
