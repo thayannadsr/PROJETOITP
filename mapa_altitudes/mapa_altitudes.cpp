@@ -59,18 +59,57 @@ class MapaAltitudes {
             return tamanho;
         }
 
-        Posicao diamond(Posicao SE, Posicao SD, Posicao IE, Posicao ID) {
+        void diamond(Posicao SE, Posicao SD, Posicao IE, Posicao ID, int d, int tam) {
             // calcula o centro dos pontos dados
-            int dLinha = (SE.linha + SD.linha + IE.linha + ID.linha) / 4;
-            int dColuna = (SE.coluna + SD.coluna + IE.coluna + ID.coluna) / 4;
-            Posicao dCentro {dLinha, dColuna};
+            // int dLinha = (SE.linha + SD.linha + IE.linha + ID.linha) / 4;
+            // int dColuna = (SE.coluna + SD.coluna + IE.coluna + ID.coluna) / 4;
+            int dLinha = 0;
+            int dColuna = d;
+            for (int dCopy = d; dCopy < tam; dCopy+=d) {
+                dLinha += tam/2;
+                Posicao dCentro {dLinha, dColuna};
+                // cout << "|" << dLinha << "|" << "\n";
+                
+                // calcula o valor medio dos pontos dados
+                int dValorMedio = (matrizAlturas[SE.linha][SE.coluna] + matrizAlturas[SD.linha][SD.coluna] + matrizAlturas[IE.linha][IE.coluna] + matrizAlturas[ID.linha][ID.coluna]) / 4;
+                cout << dCentro.linha << dCentro.coluna << dValorMedio << endl;
+                matrizAlturas[dCentro.linha][dCentro.coluna] = dValorMedio; // adicionar a variação aleatória
+                
+                cout << dCopy << ", \n";
+                // dCopy += d;
+            }
 
-            // calcula o valor medio dos pontos dados
-            int dValorMedio = (matrizAlturas[SE.linha][SE.coluna] + matrizAlturas[SD.linha][SD.coluna] + matrizAlturas[IE.linha][IE.coluna] + matrizAlturas[ID.linha][ID.coluna]) / 4;
+            // dLinha = 0;
+            // dColuna += tam / 2;
+            // for (int dCopy2 = d; dCopy2 < tam; dCopy2+=d) {
+            //     dLinha += d;
+            //     Posicao dCentro {dLinha, dColuna};
+            //     // cout << "|" << dLinha << "|" << "\n";
+                
+            //     // calcula o valor medio dos pontos dados
+            //     int dValorMedio = (matrizAlturas[SE.linha][SE.coluna] + matrizAlturas[SD.linha][SD.coluna] + matrizAlturas[IE.linha][IE.coluna] + matrizAlturas[ID.linha][ID.coluna]) / 4;
+            //     cout << dCentro.linha << dCentro.coluna << dValorMedio << endl;
+            //     matrizAlturas[dCentro.linha][dCentro.coluna] = dValorMedio; // adicionar a variação aleatória
+                
+            //     cout << dCopy2 << ", \n";
+            //     // dCopy += d;
+            // }
 
-            matrizAlturas[dCentro.linha][dCentro.coluna] = dValorMedio; // adicionar a variação aleatória
-
-            return dCentro;
+            // dLinha = d;
+            // dColuna = 0;
+            // dCopy = d;
+            // while (dCopy < tam) {
+            //     dColuna += dCopy;
+            //     Posicao dCentro {dLinha, dColuna};
+                
+            //     // // calcula o valor medio dos pontos dados
+            //     int dValorMedio = (matrizAlturas[SE.linha][SE.coluna] + matrizAlturas[SD.linha][SD.coluna] + matrizAlturas[IE.linha][IE.coluna] + matrizAlturas[ID.linha][ID.coluna]) / 4;
+                
+            //     matrizAlturas[dCentro.linha][dCentro.coluna] = dValorMedio; // adicionar a variação aleatória
+                
+            //     cout << dCopy << ", \n";
+            //     dCopy += d;
+            // }
         }
 
         void encontrarMediaDeDoisPontos(Posicao p1, Posicao p2) {
@@ -86,8 +125,11 @@ class MapaAltitudes {
         }
 
         void square(Posicao SE, Posicao SD, Posicao IE, Posicao ID, Posicao centro) {
+            // dois for que fazem vertical e horizontal
             encontrarMediaDeDoisPontos(SE, SD);
-
+            encontrarMediaDeDoisPontos(SE, IE);
+            encontrarMediaDeDoisPontos(SD, ID);
+            encontrarMediaDeDoisPontos(IE, ID);
         }
 
         void algoritmoDiamonSquare(int maximo, int maxVariacao) {
@@ -108,8 +150,15 @@ class MapaAltitudes {
             Posicao IE {tamanho-1, 0};
             Posicao ID {tamanho-1, tamanho-1};
 
-            Posicao dCentro = diamond(SE, SD, IE, ID);
-            square(SE, SD, IE, ID, dCentro);
+            int d = tamanho;
+            // while (d > 1) {
+                int iter = 1;
+                d = tamanho/(iter*2);
+                diamond(SE, SD, IE, ID, d, tamanho-1);
+                d = tamanho/(iter*4);
+                // diamond(SE, SD, IE, ID, d, tamanho-1);
+                // square(SE, SD, IE, ID, dCentro);
+            // }
         }
         
         // terminar algoritmo diamond square

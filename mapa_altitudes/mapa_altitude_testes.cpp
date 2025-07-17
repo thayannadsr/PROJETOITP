@@ -4,7 +4,7 @@ using namespace std;
 
 
 int main() {
-    MapaAltitudes mapa_teste(2, 0.5);
+    MapaAltitudes mapa_teste(3, 0.5);
     mapa_teste.gerarMatrizMapa();
     // mapa_teste.exibirValoresMapaAltura();
     // cout << "\n";
