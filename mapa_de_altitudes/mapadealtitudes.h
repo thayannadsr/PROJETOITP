@@ -1,31 +1,35 @@
 #ifndef MAPADEALTITUDES_H
 #define MAPADEALTITUDES_H
+
 #include <fstream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
 class MapaDeAltitudes {
 private:
     int tamanho;
-    float** matriz;
+    double** matriz;
 
     void alocarMatriz();
-    float randomFloat(float min = 0.0f, float max = 1.0f);
-    float gerarDeslocamentoInicial(float min = 0.15f, float max = 0.25f);
+    double randomFloat(double min = 0.0, double max = 1.0);
+    double gerarDeslocamentoInicial(double min = 0.15, double max = 0.25, double deslocamentofixado = NAN);
     void inicializarCantos();
-    void aplicarSquare(int x, int y, int passo, float deslocamento);
-    void diamondSquare(int x0, int y0, int x1, int y1, float deslocamento, float rugosidade);
-    void normalizar();
 
 public:
-    MapaDeAltitudes(int t, float rugosidade);
+    MapaDeAltitudes(int t, double rugosidade, double deslocamentoinicial = NAN);
     ~MapaDeAltitudes();
 
+    double getAltura(int x, int y) const;
+    void setAltura(int x, int y, double valor);
+    void aplicarSquare(int x, int y, int passo, double deslocamento);
+    void diamondSquare(int x0, int y0, int x1, int y1, double deslocamento, double rugosidade);
+    void normalizar();
     static int calcularTamanhoPorExpoente(int n);
-    void gerar(float rugosidade);
+    void gerar(double rugosidade, double deslocamentoinicial = NAN);
     void imprimir();
-    float ConsultarAlturaXY(int x, int y);
+    double ConsultarAlturaXY(int x, int y);
     int QuantidadeLinhas();
     int QuantidadeColunas();
     void salvarEmArquivo(const string& meutxt) const;
