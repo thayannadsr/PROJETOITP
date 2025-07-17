@@ -136,7 +136,7 @@ void MapaDeAltitudes::gerar(float rugosidade) {
     normalizar();
 }
 
-// AQQQQUIIII! Imprime a matriz de altitudes na tela formatada com duas casas decimais.
+// Imprime a matriz de altitudes na tela formatada com duas casas decimais.
 // Não recebe parâmetros e não retorna nada.
 // Serve para visualização do relevo gerado.
 void MapaDeAltitudes::imprimir() {
@@ -148,8 +148,8 @@ void MapaDeAltitudes::imprimir() {
 }
 
 // Consulta a altura em uma posição específica da matriz, com coordenadas (x, y).
-// Retorna um valor float da altitude, ou -7.0f se as coordenadas forem inválidas.
-// Serve para acesso externo à matriz sem exposição direta.
+// Retorna a altitude, ou -7.0f se as coordenadas forem inválidas.
+// Serve para acesso externo à matriz.
 float MapaDeAltitudes::ConsultarAlturaXY(int x, int y) {
     if (x < 0 || x >= tamanho || y < 0 || y >= tamanho) {
         cerr << "Coordenadas fora dos limites!" << endl;
@@ -173,8 +173,8 @@ int MapaDeAltitudes::QuantidadeColunas() {
 }
 
 // Salva a matriz de altitudes em um arquivo de texto.
-// Cada linha do arquivo representa uma linha da matriz com valores formatados.
-// Recebe o nome do arquivo como string; não retorna valor.
+// Recebe o nome do arquivo como string.
+// Não retorna valor
 void MapaDeAltitudes::salvarEmArquivo(const string& meutxt) const {
     ofstream arquivo(meutxt);
     if (!arquivo) {
@@ -195,7 +195,7 @@ void MapaDeAltitudes::salvarEmArquivo(const string& meutxt) const {
 
 // Lê os dados da matriz de um arquivo de texto gerado previamente.
 // Substitui a matriz atual pelos dados lidos do arquivo fornecido.
-// Recebe o nome do arquivo como string; não retorna valor.
+// Recebe o nome do arquivo como string e não retorna valor.
 void MapaDeAltitudes::lerDeArquivo(const string& nomeArquivo) {
     ifstream arquivo(nomeArquivo);
     if (!arquivo) {
@@ -242,7 +242,7 @@ MapaDeAltitudes::~MapaDeAltitudes() {
 
 int main() {
     int n = 2;                 
-    float rugosidade = 0.5f;         // Fator de suavidade
+    float rugosidade = 0.5f;         
 
     MapaDeAltitudes mapa(n, rugosidade);
     mapa.imprimir();
