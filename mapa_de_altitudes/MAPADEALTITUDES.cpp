@@ -241,16 +241,15 @@ MapaDeAltitudes::~MapaDeAltitudes() {
 }
 
 int main() {
-    int n = 3;                 
+    int n = 2;                 
     float rugosidade = 0.5f;         // Fator de suavidade
 
-    MapaDeAltitudes mapa(n);
-    mapa.gerar(rugosidade);
+    MapaDeAltitudes mapa(n, rugosidade);
     mapa.imprimir();
 
     mapa.salvarEmArquivo("mapadealtitudes.txt");
 
-    MapaDeAltitudes novoMapa(1); // Inicializa com tamanho qualquer, pois vai ler do arquivo
+    MapaDeAltitudes novoMapa(1, rugosidade); // Inicializa com tamanho qualquer, pois vai ler do arquivo
     novoMapa.lerDeArquivo("mapadealtitudes.txt");
     novoMapa.salvarEmArquivo("mapadealtitudes.txt");
     return 0;

@@ -19,7 +19,6 @@ private:
     void normalizar();
 
 public:
-    MapaDeAltitudes(int t);
     MapaDeAltitudes(int t, float rugosidade);
     ~MapaDeAltitudes();
 
