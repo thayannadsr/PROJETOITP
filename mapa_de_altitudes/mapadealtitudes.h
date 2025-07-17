@@ -20,8 +20,10 @@ private:
 
 public:
     MapaDeAltitudes(int t);
+    MapaDeAltitudes(int t, float rugosidade);
     ~MapaDeAltitudes();
 
+    static int calcularTamanhoPorExpoente(int n);
     void gerar(float rugosidade);
     void imprimir();
     float ConsultarAlturaXY(int x, int y);
