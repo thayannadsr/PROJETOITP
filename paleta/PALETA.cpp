@@ -1,25 +1,30 @@
+#include <iostream>
 #include "paleta.h"
 #include <fstream>
 #include <algorithm>
+#include <vector>
+using namespace std;
 
-
-Cor::Cor(unsigned char _r, unsigned char _g, unsigned char _b) {
-    r = _r;
-    g = _g;
-    b = _b;
-}
-
+// Construtor que inicializa a paleta com a quantidade de cores, um vetor de cores (c) e os valores associados (v).
+// Ele também ordena os valores usando a função ordenarValores.
+// Não retorna nada, pois é o construtor da classe.
 Paleta::Paleta(int q, vector<Cor> c, vector<int> v) {
     quantidade = q;
     cores = c;
     valores = ordenarValores(v);
 }
 
+// Ordena o vetor de inteiros v em ordem crescente usando std::sort.
+// Recebe um vector<int> como parâmetro e retorna o mesmo vetor, porém ordenado.
+// Serve para garantir que os valores associados às cores estejam organizados.
 vector<int> Paleta::ordenarValores(vector<int> v) {
     sort(v.begin(), v.end());
     return v;
 }
 
+// Salva a paleta atual em um arquivo .txt dentro da pasta ./paletas_txt/.
+// Recebe o nome da nova paleta.
+// Escreve no arquivo a quantidade, os valores e as cores no formato especificado.
 void Paleta::escreverPaleta(string nomeNovaPaleta) {
     ofstream file("./paletas_txt/" + nomeNovaPaleta + ".txt");
     file << quantidade << "\n";
@@ -29,6 +34,9 @@ void Paleta::escreverPaleta(string nomeNovaPaleta) {
     file.close();
 }
 
+// Lê uma paleta de um arquivo .txt, reconstruindo os valores e as cores a partir do conteúdo.
+// Recebe o caminho do arquivo como string e retorna uma nova instância da classe Paleta.
+// Serve para carregar paletas salvas previamente.
 Paleta Paleta::lerPaleta(string nome_paleta) {
     ifstream arquivo;
     arquivo.open(nome_paleta);
@@ -61,6 +69,9 @@ Paleta Paleta::lerPaleta(string nome_paleta) {
     return novaPaleta;
 }
 
+// Consulta qual cor está associada a um dado valor.
+// Retorna um objeto Cor, de acordo com a faixa de valor em que n se encaixa.
+// Se n estiver abaixo do primeiro valor, imprime uma mensagem de erro.
 Cor Paleta::consultarCor(int n) {
     for (int x = 0; x < quantidade; x++) {
         if (n < valores[0]) {

@@ -3,15 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include "cor.h"
 using namespace std;
-
-struct Cor {
-public:
-    unsigned char r, g, b;
-
-    Cor(unsigned char _r, unsigned char _g, unsigned char _b);
-    Cor() : r(0), g(0), b(0) {}
-};
 
 class Paleta {
 public:
