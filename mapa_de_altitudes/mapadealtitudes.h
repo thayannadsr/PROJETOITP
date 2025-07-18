@@ -7,10 +7,11 @@
 
 using namespace std;
 
-class MapaDeAltitudes {
+class MapaDeAltitudes { 
 private:
     int tamanho;
     double** matriz;
+    bool** preenchido;
 
     void alocarMatriz();
     double randomFloat(double min = 0.0, double max = 1.0);
@@ -21,6 +22,7 @@ public:
     MapaDeAltitudes(int t, double rugosidade, double deslocamentoinicial = NAN);
     ~MapaDeAltitudes();
 
+    void limparMatriz();
     double getAltura(int x, int y) const;
     void setAltura(int x, int y, double valor);
     void aplicarSquare(int x, int y, int passo, double deslocamento);

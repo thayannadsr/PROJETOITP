@@ -18,10 +18,13 @@ double arredondar6(double valor) {
 // Essa função é chamada internamente nos construtores e ao carregar arquivos.
 void MapaDeAltitudes::alocarMatriz() {
     matriz = new double*[tamanho];
+    preenchido = new bool*[tamanho];
     for (int i = 0; i < tamanho; ++i) {
         matriz[i] = new double[tamanho];
+        preenchido[i] = new bool[tamanho];
         for (int j = 0; j < tamanho; ++j) {
             matriz[i][j] = 0.0;
+            preenchido[i][j] = false;
         }
     }
 }
@@ -32,6 +35,7 @@ void MapaDeAltitudes::setAltura(int x, int y, double valor) {
         return;
     }
     matriz[y][x] = valor;
+    preenchido[y][x] = true;
 }
 
 // Gera um número aleatório do tipo float entre os valores min e max.
@@ -64,18 +68,28 @@ void MapaDeAltitudes::inicializarCantos() {
 // Calcula a média dos vizinhos e adiciona um deslocamento aleatório.
 void MapaDeAltitudes::aplicarSquare(int x, int y, int passo, double deslocamento) {
     if (x < 0 || x >= tamanho || y < 0 || y >= tamanho) return;
-    if (matriz[y][x] != 0.0) return;
+    if (preenchido[y][x]) return;
 
     double soma = 0.0;
     int contador = 0;
 
-    if (y - passo >= 0) { soma += matriz[y - passo][x]; contador++; }
-    if (y + passo < tamanho) { soma += matriz[y + passo][x]; contador++; }
-    if (x - passo >= 0) { soma += matriz[y][x - passo]; contador++; }
-    if (x + passo < tamanho) { soma += matriz[y][x + passo]; contador++; }
+    if (y - passo >= 0 && preenchido[y - passo][x]) {
+        soma += matriz[y - passo][x]; contador++;
+    }
+    if (y + passo < tamanho && preenchido[y + passo][x]) {
+        soma += matriz[y + passo][x]; contador++;
+    }
+    if (x - passo >= 0 && preenchido[y][x - passo]) {
+        soma += matriz[y][x - passo]; contador++;
+    }
+    if (x + passo < tamanho && preenchido[y][x + passo]) {
+        soma += matriz[y][x + passo]; contador++;
+    }
 
-    if (contador > 0)
+    if (contador > 0) {
         matriz[y][x] = soma / contador + randomFloat(-deslocamento, deslocamento);
+        preenchido[y][x] = true;
+    }
 }
 
 // Executa o algoritmo Diamond-Square recursivamente até preenchê-la completamente.
@@ -88,14 +102,17 @@ void MapaDeAltitudes::diamondSquare(int x0, int y0, int x1, int y1, double deslo
     int meioX = x0 + dist / 2;
     int meioY = y0 + dist / 2;
 
-    double media = (matriz[y0][x0] + matriz[y0][x1] +
-                    matriz[y1][x0] + matriz[y1][x1]) / 4.0;
-    matriz[meioY][meioX] = media + randomFloat(-deslocamento, deslocamento);
+    if (!preenchido[meioY][meioX]) {
+        double media = (matriz[y0][x0] + matriz[y0][x1] +
+                        matriz[y1][x0] + matriz[y1][x1]) / 4.0;
+        matriz[meioY][meioX] = media + randomFloat(-deslocamento, deslocamento);
+        preenchido[meioY][meioX] = true;
+    }
 
-    aplicarSquare(meioX, y0, dist / 2, deslocamento);
-    aplicarSquare(meioX, y1, dist / 2, deslocamento);
-    aplicarSquare(x0, meioY, dist / 2, deslocamento);
-    aplicarSquare(x1, meioY, dist / 2, deslocamento);
+    aplicarSquare(meioX, y0, dist / 2, deslocamento);  // topo
+    aplicarSquare(meioX, y1, dist / 2, deslocamento);  // baixo
+    aplicarSquare(x0, meioY, dist / 2, deslocamento);  // esquerda
+    aplicarSquare(x1, meioY, dist / 2, deslocamento);  // direita
 
     double novoDeslocamento = deslocamento * rugosidade;
     diamondSquare(x0, y0, meioX, meioY, novoDeslocamento, rugosidade);
@@ -249,14 +266,26 @@ void MapaDeAltitudes::lerDeArquivo(const string& nomeArquivo) {
     arquivo.close();
 }
 
+void MapaDeAltitudes::limparMatriz() {
+    for (int y = 0; y < tamanho; ++y) {
+        for (int x = 0; x < tamanho; ++x) {
+            matriz[y][x] = 0.0;
+            preenchido[y][x] = false;
+        }
+    }
+}
+
+
 // Destrutor da classe. Libera a memória alocada dinamicamente da matriz.
 // Garante que não haja vazamentos de memória ao final do uso do objeto.
 // É chamado automaticamente quando o objeto é destruído ou sai de escopo.
 MapaDeAltitudes::~MapaDeAltitudes() {
     if (matriz != nullptr) {
-        for (int i = 0; i < tamanho; ++i)
+        for (int i = 0; i < tamanho; ++i) {
             delete[] matriz[i];
+            delete[] preenchido[i];
+        }
         delete[] matriz;
+        delete[] preenchido;
     }
 }
-
