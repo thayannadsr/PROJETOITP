@@ -61,7 +61,7 @@ TEST_CASE("Verifica leitura de arquivo 3x3 com dados específicos") {
     CHECK(Approx(mapa.ConsultarAlturaXY(2, 2)) == 0.9f);
 }
 
-TEST_CASE("Verifica geração determinística com rugosidade 0.0") {
+TEST_CASE("Verifica geração determinística com rugosidade 0.0, usei o deslocamento 0 e a rugosidade 1") {
     float deslocamentofixado = 0.0f;
     MapaDeAltitudes mapa(3, 1.0f, deslocamentofixado); // 9x9
     float alturaInicial = 0.5f;
