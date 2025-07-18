@@ -8,17 +8,37 @@
 #include <fstream> // leitura e escrita em arquivos
 using namespace std;
 
+// Arredonda valor para 6 casas decimais
+float arredondar6(float valor) {
+    return round(valor * 1e6f) / 1e6f;
+}
+
 // Aloca memória dinâmica para a matriz de altitudes.
 // Cria uma matriz tamanho x tamanho com valores iniciais 0.0f.
+// Cria a matriz preenchido para verificar se a coordenada passou pelo diamonSquare
 // Essa função é chamada internamente nos construtores e ao carregar arquivos.
 void MapaDeAltitudes::alocarMatriz() {
     matriz = new float*[tamanho];
+    preenchido = new bool*[tamanho];
     for (int i = 0; i < tamanho; ++i) {
         matriz[i] = new float[tamanho];
+        preenchido[i] = new bool[tamanho];
         for (int j = 0; j < tamanho; ++j) {
             matriz[i][j] = 0.0f;
+            preenchido[i][j] = false;
         }
     }
+}
+
+// Setter para modificar valor da matriz
+// Recebe coordenada (y,x) de um ponto P e o preenche com um dado valor
+// torna o preenchido verdadeiro, já que P não deve ser preenchido novamente
+void MapaDeAltitudes::setAltura(int x, int y, float valor) {
+    if (x < 0 || x >= tamanho || y < 0 || y >= tamanho) {
+        return;
+    }
+    matriz[y][x] = valor;
+    preenchido[y][x] = true;
 }
 
 // Gera um número aleatório do tipo float entre os valores min e max.
@@ -31,8 +51,12 @@ float MapaDeAltitudes::randomFloat(float min, float max) {
 // Gera o deslocamento inicial aleatório.
 // Recebe um intervalo de valores float entre min e max (default: 0.15f a 0.25f).
 // Retorna um valor float dentro desse intervalo, usado para alterar as médias.
-float MapaDeAltitudes::gerarDeslocamentoInicial(float min, float max) {
-    return randomFloat(min, max);
+float MapaDeAltitudes::gerarDeslocamentoInicial(float min, float max, float deslocamentofixado) {
+    if (isnan(deslocamentofixado)) {
+        return randomFloat(min, max);
+    } else {
+        return deslocamentofixado;
+    }
 }
 
 // Inicializa os quatro cantos da matriz com valores aleatórios.
@@ -44,23 +68,33 @@ void MapaDeAltitudes::inicializarCantos() {
     matriz[tamanho - 1][tamanho - 1] = randomFloat();
 }
 
-// Etapa Square
+// Etapa Square com verificação do preenchimento
 // Recebe coordenadas (x, y), a distância entre os pontos a serem gerados e o valor do deslocamento.
 // Calcula a média dos vizinhos e adiciona um deslocamento aleatório.
 void MapaDeAltitudes::aplicarSquare(int x, int y, int passo, float deslocamento) {
     if (x < 0 || x >= tamanho || y < 0 || y >= tamanho) return;
-    if (matriz[y][x] != 0.0f) return;
+    if (preenchido[y][x]) return;
 
     float soma = 0.0f;
     int contador = 0;
 
-    if (y - passo >= 0) { soma += matriz[y - passo][x]; contador++; }
-    if (y + passo < tamanho) { soma += matriz[y + passo][x]; contador++; }
-    if (x - passo >= 0) { soma += matriz[y][x - passo]; contador++; }
-    if (x + passo < tamanho) { soma += matriz[y][x + passo]; contador++; }
+    if (y - passo >= 0 && preenchido[y - passo][x]) {
+        soma += matriz[y - passo][x]; contador++;
+    }
+    if (y + passo < tamanho && preenchido[y + passo][x]) {
+        soma += matriz[y + passo][x]; contador++;
+    }
+    if (x - passo >= 0 && preenchido[y][x - passo]) {
+        soma += matriz[y][x - passo]; contador++;
+    }
+    if (x + passo < tamanho && preenchido[y][x + passo]) {
+        soma += matriz[y][x + passo]; contador++;
+    }
 
-    if (contador > 0)
+    if (contador > 0) {
         matriz[y][x] = soma / contador + randomFloat(-deslocamento, deslocamento);
+        preenchido[y][x] = true;
+    }
 }
 
 // Executa o algoritmo Diamond-Square recursivamente até preenchê-la completamente.
@@ -73,15 +107,17 @@ void MapaDeAltitudes::diamondSquare(int x0, int y0, int x1, int y1, float desloc
     int meioX = x0 + dist / 2;
     int meioY = y0 + dist / 2;
 
-    float media = (matriz[y0][x0] + matriz[y0][x1] +
-                   matriz[y1][x0] + matriz[y1][x1]) / 4.0f;
-    matriz[meioY][meioX] = media + randomFloat(-deslocamento, deslocamento);
-    // matriz[meioY][meioX] = media + randomFloat(0, deslocamento);
+    if (!preenchido[meioY][meioX]) {
+        float media = (matriz[y0][x0] + matriz[y0][x1] +
+                       matriz[y1][x0] + matriz[y1][x1]) / 4.0f;
+        matriz[meioY][meioX] = media + randomFloat(-deslocamento, deslocamento);
+        preenchido[meioY][meioX] = true;
+    }
 
-    aplicarSquare(meioX, y0, dist / 2, deslocamento);
-    aplicarSquare(meioX, y1, dist / 2, deslocamento);
-    aplicarSquare(x0, meioY, dist / 2, deslocamento);
-    aplicarSquare(x1, meioY, dist / 2, deslocamento);
+    aplicarSquare(meioX, y0, dist / 2, deslocamento);  // topo
+    aplicarSquare(meioX, y1, dist / 2, deslocamento);  // baixo
+    aplicarSquare(x0, meioY, dist / 2, deslocamento);  // esquerda
+    aplicarSquare(x1, meioY, dist / 2, deslocamento);  // direita
 
     float novoDeslocamento = deslocamento * rugosidade;
     diamondSquare(x0, y0, meioX, meioY, novoDeslocamento, rugosidade);
@@ -89,7 +125,6 @@ void MapaDeAltitudes::diamondSquare(int x0, int y0, int x1, int y1, float desloc
     diamondSquare(x0, meioY, meioX, y1, novoDeslocamento, rugosidade);
     diamondSquare(meioX, meioY, x1, y1, novoDeslocamento, rugosidade);
 }
-
 // Normaliza os valores da matriz para ficarem entre 0.0 e 1.0.
 // Procura o menor e o maior valor na matriz e reescala todos proporcionalmente.
 // Não recebe parâmetros nem retorna valor. Modifica a matriz diretamente.
@@ -108,17 +143,17 @@ void MapaDeAltitudes::normalizar() {
 
     for (int i = 0; i < tamanho; ++i)
         for (int j = 0; j < tamanho; ++j)
-            matriz[i][j] = (matriz[i][j] - minVal) / intervalo;
+            matriz[i][j] = arredondar6((matriz[i][j] - minVal) / intervalo);
 }
 
 // Construtor que recebe o expoente 'n' e o valor de rugosidade.
 // Calcula o tamanho da matriz com base em 2^n + 1, aloca memória, inicializa os cantos,
 // em seguida, gera o terreno usando o algoritmo Diamond-Square.
-MapaDeAltitudes::MapaDeAltitudes(int n, float rugosidade) : tamanho(calcularTamanhoPorExpoente(n)), matriz(nullptr) {
+MapaDeAltitudes::MapaDeAltitudes(int n, float rugosidade, float deslocamentoinicial) : tamanho(calcularTamanhoPorExpoente(n)), matriz(nullptr) {
     srand(static_cast<unsigned>(time(0)));
     alocarMatriz();
     inicializarCantos();
-    gerar(rugosidade);
+    gerar(rugosidade, deslocamentoinicial);
 }
 
 // Recebe o n
@@ -131,8 +166,13 @@ int MapaDeAltitudes::calcularTamanhoPorExpoente(int n) {
 // Gera as altitudes usando o algoritmo Diamond-Square com uma dada rugosidade.
 // O parâmetro rugosidade controla a sutileza do relevo gerado.
 // Ao final, normaliza os valores para manter a escala entre 0.0 e 1.0.
-void MapaDeAltitudes::gerar(float rugosidade) {
-    float deslocamento = gerarDeslocamentoInicial();
+void MapaDeAltitudes::gerar(float rugosidade, float deslocamentoinicial) {
+    float deslocamento;
+    if (!isnan(deslocamentoinicial)) {
+        deslocamento = deslocamentoinicial;
+    } else {
+        deslocamento = gerarDeslocamentoInicial(); 
+    }
     diamondSquare(0, 0, tamanho - 1, tamanho - 1, deslocamento, rugosidade);
     normalizar();
 }
@@ -230,13 +270,25 @@ void MapaDeAltitudes::lerDeArquivo(const string& nomeArquivo) {
     arquivo.close();
 }
 
+void MapaDeAltitudes::limparMatriz() {
+    for (int y = 0; y < tamanho; ++y) {
+        for (int x = 0; x < tamanho; ++x) {
+            matriz[y][x] = 0.0f;  // Literal float
+            preenchido[y][x] = false;
+        }
+    }
+}
+
 // Destrutor da classe. Libera a memória alocada dinamicamente da matriz.
 // Garante que não haja vazamentos de memória ao final do uso do objeto.
 // É chamado automaticamente quando o objeto é destruído ou sai de escopo.
 MapaDeAltitudes::~MapaDeAltitudes() {
     if (matriz != nullptr) {
-        for (int i = 0; i < tamanho; ++i)
+        for (int i = 0; i < tamanho; ++i) {
             delete[] matriz[i];
+            delete[] preenchido[i];
+        }
         delete[] matriz;
+        delete[] preenchido;
     }
 }
