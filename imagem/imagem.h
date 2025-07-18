@@ -1,20 +1,19 @@
 #ifndef IMAGEM_H
 #define IMAGEM_H
+
 #include <iostream>
-#include "cor.h"
+#include "../paleta/paleta.h"
+
 using namespace std;
 
 class Imagem {
-    string tipo;
     int largura;
     int altura;
-    int max;
     Cor** pixel;
+    int max;
 
     public:
-    Imagem(int alargura, int aaltura);
-    ~Imagem();
-
+    string tipo;
     Imagem(int alargura, int aaltura, string atipo="P3", int mInt=255);
     void matrizImagem();
     void desalocarMatriz();

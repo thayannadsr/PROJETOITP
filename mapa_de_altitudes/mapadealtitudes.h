@@ -8,17 +8,17 @@ using namespace std;
 class MapaDeAltitudes {
 private:
     int tamanho;
-    float** matriz;
-
+    
     void alocarMatriz();
     float randomFloat(float min = 0.0f, float max = 1.0f);
-    float gerarDeslocamentoInicial(float min = 0.15f, float max = 0.25f);
+    float gerarDeslocamentoInicial(float min = 0.5f, float max = 1.0f);
     void inicializarCantos();
     void aplicarSquare(int x, int y, int passo, float deslocamento);
     void diamondSquare(int x0, int y0, int x1, int y1, float deslocamento, float rugosidade);
     void normalizar();
-
-public:
+    
+    public:
+    float** matriz;
     MapaDeAltitudes(int t, float rugosidade);
     ~MapaDeAltitudes();
 

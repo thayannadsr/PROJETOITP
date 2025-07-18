@@ -76,6 +76,7 @@ void MapaDeAltitudes::diamondSquare(int x0, int y0, int x1, int y1, float desloc
     float media = (matriz[y0][x0] + matriz[y0][x1] +
                    matriz[y1][x0] + matriz[y1][x1]) / 4.0f;
     matriz[meioY][meioX] = media + randomFloat(-deslocamento, deslocamento);
+    // matriz[meioY][meioX] = media + randomFloat(0, deslocamento);
 
     aplicarSquare(meioX, y0, dist / 2, deslocamento);
     aplicarSquare(meioX, y1, dist / 2, deslocamento);
@@ -238,19 +239,4 @@ MapaDeAltitudes::~MapaDeAltitudes() {
             delete[] matriz[i];
         delete[] matriz;
     }
-}
-
-int main() {
-    int n = 2;                 
-    float rugosidade = 0.5f;         
-
-    MapaDeAltitudes mapa(n, rugosidade);
-    mapa.imprimir();
-
-    mapa.salvarEmArquivo("mapadealtitudes.txt");
-
-    MapaDeAltitudes novoMapa(1, rugosidade); // Inicializa com tamanho qualquer, pois vai ler do arquivo
-    novoMapa.lerDeArquivo("mapadealtitudes.txt");
-    novoMapa.salvarEmArquivo("mapadealtitudes.txt");
-    return 0;
 }

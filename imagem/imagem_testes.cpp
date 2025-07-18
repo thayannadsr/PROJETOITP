@@ -1,17 +1,18 @@
 #include <iostream>
-#include "imagem.cpp"
+#include "imagem.h"
 using namespace std;
 
 
 int main() {
-    Imagem matrizTeste(2, 3);
-    cout << matrizTeste.tipo << "\n";
-    matrizTeste.matrizImagem();
-    matrizTeste.mudarPixel(0, 0, 255, 0, 0);
-    matrizTeste.mudarPixel(1, 1, 0, 255, 0);
-    matrizTeste.mudarPixel(0, 2, 0, 0, 255);
-    matrizTeste.escreverPPM("imagem_teste_erro"); // corrigir x, y
-    matrizTeste.exibirValoresPixelRGB();
+    // Imagem matrizTeste(2, 3);
+    // cout << matrizTeste.tipo << "\n";
+    // matrizTeste.matrizImagem();
+    // matrizTeste.exibirValoresPixelRGB();
+    // matrizTeste.mudarPixel(0, 0, 255, 0, 0);
+    // matrizTeste.mudarPixel(1, 1, 0, 255, 0);
+    // matrizTeste.mudarPixel(0, 2, 0, 0, 255);
+    // matrizTeste.escreverPPM("imagem_teste_erro"); // corrigir x, y
+    // matrizTeste.exibirValoresPixelRGB();
 
     // Imagem matrizTeste(10, 10);
     // cout << matrizTeste.tipo << "\n";
@@ -85,4 +86,27 @@ int main() {
     // matrizTeste.exibirValoresPixelRGB();
     // matrizTeste.escreverPPM("./imagens_ppm/amogus");
     // matrizTeste.desalocarMatriz();
+
+    Imagem matriz2x2(2, 2);
+    matriz2x2.matrizImagem();
+    matriz2x2.exibirValoresPixelRGB();
+    matriz2x2.desalocarMatriz();
+    
+    Imagem matrizBranca(3, 4);
+    matrizBranca.matrizImagem();
+    matrizBranca.mudarPixel(0, 0, 255, 255, 255);
+    matrizBranca.mudarPixel(0, 1, 255, 255, 255);
+    matrizBranca.mudarPixel(0, 2, 255, 255, 255);
+    matrizBranca.mudarPixel(0, 3, 255, 255, 255);
+    matrizBranca.mudarPixel(1, 0, 255, 255, 255);
+    matrizBranca.mudarPixel(1, 1, 255, 255, 255);
+    matrizBranca.mudarPixel(1, 2, 255, 255, 255);
+    matrizBranca.mudarPixel(1, 3, 255, 255, 255);
+    matrizBranca.mudarPixel(2, 0, 255, 255, 255);
+    matrizBranca.mudarPixel(2, 1, 255, 255, 255);
+    matrizBranca.mudarPixel(2, 2, 255, 255, 255);
+    matrizBranca.mudarPixel(2, 3, 255, 255, 255);
+    matrizBranca.exibirValoresPixelRGB();
+    matrizBranca.escreverPPM("./imagens_ppm/imagem_branca");
+    matrizBranca.desalocarMatriz();
 }
